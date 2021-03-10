@@ -61,7 +61,7 @@ Only the __jump box__ machine can accept connections from the Internet. Access t
 
 | Name          | IP             | Port    |
 |---------------|----------------|---------|
-| local machine | 125.253.29.150 | 22(SSH) |
+| local machine | 125.253.29.150 | 22(SSH), 5601 |
 | load balancer | 20.53.124.189  | 80(HTTP)|
 
 Machines within the network can only be accessed by __ansible container in the jump box(10.0.0.4)__.
@@ -75,7 +75,7 @@ A summary of the access policies in place can be found in the table below.
 |-------------|---------------------|------------------------------|
 | Jump Box    | Yes                 | 125.253.29.150               |
 | ELK Machine | Yes                 | 125.253.29.150               |
-| Web1, Web2, Web3 |  No            |    |
+| Web1, Web2, Web3 |  No            | 20.53.124.189   |
 
 (not sure how to do, is it simply based on the rules in the security group?)
 
@@ -115,9 +115,12 @@ We have installed the following Beats on these machines:
 - Metricbeat
 
 These Beats allow us to collect the following information from each machine:
-- Filebeat: system logs (eg: login events, error messages)
-- Metricbeat: system status (eg: CPU usage, memory consumption)
+- Filebeat: system-generated logs
+  - eg: login records, root user(sudo), privilege requests, software/system generated log record, user/group changes
+- Metricbeat: system status
+  - eg: CPU usage, System Memory usage, Network traffics status, Disk utilisation
 - _TODO: In 1-2 sentences, explain what kind of data each beat collects, and provide 1 example of what you expect to see. E.g., `Winlogbeat` collects Windows logs, which we use to track user logon events, etc._
+(sounds like the Description of the Topology one???)
 
 ### Using the Playbook
 In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned:
@@ -126,20 +129,21 @@ SSH into the control node and follow the steps below:
 - Copy the __playbook and configurable__ file to __the Ansible container__.
 - Update the __playbook__ file to include...
   - Filebeat
-    - f
-    ```
-      sudo 123
-    ```
+    - target machine host group
+    - username
+    - tasks for configure and installing filebeat
   - Metricbeat
-    - f
-  - ELK
-    - f
+    - target machine host group
+    - username
+    - tasks for configure and installing metricbeat
+
 - Run the playbook, and navigate to __the machine's IP address via browser__ to check that the installation worked as expected.
 
 _TODO: Answer the following questions to fill in the blanks:_
 - _Which file is the playbook? Where do you copy it?_
 - _Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?_
 - _Which URL do you navigate to in order to check that the ELK server is running?_
-(not sure)
+(not sure what to update, is it mean the specific file name or others?
+also the URL, not sure how to specify the URL)
 
 _As a **Bonus**, provide the specific commands the user will need to run to download the playbook, update the files, etc._
