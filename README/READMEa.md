@@ -2,7 +2,7 @@
 
 The files in this repository were used to configure the network depicted below.
 
-![TODO: Update the path with the name of your diagram](Images/diagram_filename.png)
+![TODO: Update the path with the name of your diagram](Images/network_diagram.png)
 
 These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the Playbook file may be used to install only certain pieces of it, such as Filebeat.
 
@@ -21,22 +21,11 @@ This document contains the following details:
 
 The main purpose of this network is to expose a load-balanced and monitored instance of DVWA, the D*mn Vulnerable Web Application.
 
-And having a Load balancing on each web server ensures that the application will be highly available, and reduce loading impact as an addition.
-- _TODO: What aspect of security do load balancers protect? What is the advantage of a jump box?_ <--*(done)*
+And having a Load balancer on each web server ensures that the application will be highly available, and reduce loading impact as an addition.
+- _TODO: What aspect of security do load balancers protect? What is the advantage of a jump box?_ <--(done)
 
-Integrating an ELK server allows users to easily monitor the vulnerable VMs for changes to the file? and system records?.
+Integrating an ELK server allows users to easily monitor the vulnerable VMs for changes to the settings and system utilisation.
 
-Filebeat system in the ELK server is used to record file system logs and alerts, such as:
-- login records
-- root user(sudo) privilege requests
-- software/system generated log record
-- user/group changes
-
-And Metricbeat is used to record machine metrics, such as:
--  CPU usage
--  System Memory usage
--  Network traffics status
--  Disk utilisation
 - _TODO: What does Filebeat watch for?_
 - _TODO: What does Metricbeat record?_
 (done?)
@@ -61,8 +50,7 @@ Only the __jump box__ machine can accept connections from the Internet. Access t
 
 | Name          | IP             | Port    |
 |---------------|----------------|---------|
-| local machine | 125.253.29.150 | 22(SSH), 5601 |
-| load balancer | 20.53.124.189  | 80(HTTP)|
+| local machine | 125.253.29.150 | 22(SSH) |
 
 Machines within the network can only be accessed by __ansible container in the jump box(10.0.0.4)__.
 
@@ -71,12 +59,13 @@ Machines within the network can only be accessed by __ansible container in the j
 
 A summary of the access policies in place can be found in the table below.
 
-| Name        | Publicly Accessible | Allowed IP Addresses         |
-|-------------|---------------------|------------------------------|
-| Jump Box    | Yes                 | 125.253.29.150               |
-| ELK Machine | Yes                 | 125.253.29.150               |
-| Web1, Web2, Web3 |  No            | 20.53.124.189   |
-
+| Name        | Publicly Accessible | Allowed IP Addresses         | Source Port | Destination Port |
+|-------------|---------------------|------------------------------|-------------|--------------------|
+| Jump Box    | Yes                 | 125.253.29.150               |any|22|
+| ELK Machine | Yes                 | 125.253.29.150               |any|5601|
+| Web1, Web2, Web3 |  Yes           | 20.53.124.189                |any|80|
+| Web1, Web2, Web3 | No             | 10.0.0.4                     |any|22|
+| ELK Machine | No                  | 10.0.0.4                     |any|22|
 (not sure how to do, is it simply based on the rules in the security group?)
 
 
@@ -126,7 +115,7 @@ These Beats allow us to collect the following information from each machine:
 In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned:
 
 SSH into the control node and follow the steps below:
-- Copy the __playbook and configurable__ file to __the Ansible container__.
+- Copy the __playbook and configuration__ file to the __Ansible container__.
 - Update the __playbook__ file to include...
   - Filebeat
     - target machine host group
@@ -137,7 +126,9 @@ SSH into the control node and follow the steps below:
     - username
     - tasks for configure and installing metricbeat
 
-- Run the playbook, and navigate to __the machine's IP address via browser__ to check that the installation worked as expected.
+- Run the playbook, and navigate to __http://[ELK server IP address]:5601/app/kibana*__ to check that the installation worked as expected.
+
+_*ELK server IP address is listed above_
 
 _TODO: Answer the following questions to fill in the blanks:_
 - _Which file is the playbook? Where do you copy it?_
